@@ -49,7 +49,7 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
  * @copyright 2007-2016 Robert Richards <rrichards@ctindustries.net>
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  *
- * @version   2.0.0
+ * @version   2.0.0 custom      patched by mm @see line 174
  */
 class WSSESoap
 {
@@ -169,6 +169,9 @@ class WSSESoap
 
         $nonceNode = $this->soapDoc->createElementNS(self::WSSENS,  self::WSSEPFX.':Nonce', base64_encode($nonce));
         $token->appendChild($nonceNode);
+        
+        #mm
+        $nonceNode->setAttribute('EncodingType', "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary");
 
         $created = $this->soapDoc->createElementNS(self::WSUNS,  self::WSUPFX.':Created', $createdate);
         $token->appendChild($created);
