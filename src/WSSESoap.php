@@ -132,7 +132,7 @@ class WSSESoap
         }
     }
 
-    public function addUserToken($userName, $password = null, $passwordDigest = false)
+    public function addUserToken($userName, $password = null, $passwordDigest = false, $timestamp = null, $nonceGenerator = null)
     {
         if ($passwordDigest && empty($password)) {
             throw new Exception('Cannot calculate the digest without a password');
@@ -150,9 +150,9 @@ class WSSESoap
 
         /* Generate nonce - create a 256 bit session key to be used */
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
-        $nonce = $objKey->generateSessionKey();
+        $nonce = $nonceGenerator ? $nonceGenerator() : $objKey->generateSessionKey();
         unset($objKey);
-        $createdate = gmdate("Y-m-d\TH:i:s").'Z';
+        $createdate = $timestamp ?? gmdate("Y-m-d\TH:i:s").'Z';
 
         if ($password) {
             $passType = self::WSUNAME.'#PasswordText';
